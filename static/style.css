@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #f4f6f9;
+    color: #333;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #1e293b;
+    padding: 15px 40px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+/* BUTTON */
+.btn {
+    background: #2563eb;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #1d4ed8;
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* LINK CARD */
+.link-card {
+    text-decoration: none;
+    color: black;
+}
+
+.dark {
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+.dark .card {
+    background: #1e293b;
+    color: white;
+}
+
+.dark .navbar {
+    background: #020617;
+}
+
+
+/* ===== MOCK TEST CLEAN UI ===== */
+
+/* OPTION BASE */
+.option {
+    display: block;
+    padding: 14px;
+    margin: 10px 0;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* HIDE RADIO BUT KEEP IT ACTIVE */
+.option input {
+    display: none;
+}
+
+/* SELECTED (BEFORE SUBMIT) */
+.option input:checked + span,
+.option:has(input:checked) {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+/* CORRECT ANSWER */
+.correct {
+    background-color: #16a34a !important;
+    color: white;
+    border-color: #16a34a;
+}
+
+/* WRONG ANSWER */
+.wrong {
+    background-color: #dc2626 !important;
+    color: white;
+    border-color: #dc2626;
+}
+
+.btn {
+    background-color: #2563eb;
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}

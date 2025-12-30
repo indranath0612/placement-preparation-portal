@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mock Test</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div><b>Placement Portal</b></div>
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/resume">Resume</a>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+    <div class="card">
+
+        <h2>📝 Mock Test</h2>
+
+        <form method="POST">
+
+         <form method="POST">
+
+{% for q in questions %}
+    {% set q_index = loop.index0 %}
+
+    <div class="question-block">
+        <p><b>{{ loop.index }}. {{ q.q }}</b></p>
+
+        {% for opt in q.options %}
+            {% set opt_id = "q" ~ q_index ~ "_" ~ loop.index0 %}
+
+            {% if submitted and opt == q.answer %}
+                {% set cls = "option correct" %}
+            {% elif submitted and opt == q.selected and opt != q.answer %}
+                {% set cls = "option wrong" %}
+            {% else %}
+                {% set cls = "option" %}
+            {% endif %}
+
+            <label class="{{ cls }}" for="{{ opt_id }}">
+                <input type="radio"
+                       id="{{ opt_id }}"
+                       name="q{{ q_index }}"
+                       value="{{ opt }}"
+                       {% if q.selected == opt %}checked{% endif %}
+                       {% if submitted %}disabled{% endif %}>
+                {{ opt }}
+            </label>
+        {% endfor %}
+    </div>
+
+
+{% endfor %}
+<button type="submit" class="btn">Submit Test</button>
+
+</form>
+
+
+
+
+
+
+        </form>
+
+        {% if score is not none %}
+            <h3 style="margin-top:20px;">
+                Your Score: {{ score }} / {{ questions | length }}
+            </h3>
+        {% endif %}
+
+    </div>
+</div>
+{% if score is not none %}
+    <h3>Your Score: {{ score }} / {{ questions|length }}</h3>
+{% endif %}
+
+</body>
+</html>

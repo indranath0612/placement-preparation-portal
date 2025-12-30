@@ -1,0 +1,39 @@
+   <!DOCTYPE html>
+<html>
+<head>
+    <title>Coding Practice</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <button class="btn" onclick="toggleDark()">🌙</button>
+    <div><b>Placement Portal</b></div>
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/mocktest">Mock Test</a>
+        <a href="/resume">Resume</a>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+    <div class="card">
+
+        <h2>💻 Coding Practice Questions</h2>
+        <p>Practice commonly asked coding interview problems.</p>
+
+        <ol style="margin-top:20px; padding-left:20px;">
+            {% for q in questions %}
+                <li style="margin-bottom:10px;">
+                    {{ q }}
+                </li>
+            {% endfor %}
+        </ol>
+
+    </div>
+</div>
+
+</body>
+</html>
