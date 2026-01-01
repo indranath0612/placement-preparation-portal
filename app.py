@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
+from flask import session
 
 app = Flask(__name__)
 app.secret_key = "placement_secret"
+app.secret_key = "supersecretkey123"
 
 def init_db():
     conn = sqlite3.connect("database.db")
@@ -269,17 +271,39 @@ def mocktest():
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
-    cur.execute("""
-        SELECT * FROM mock_questions
-        ORDER BY RANDOM()
-        LIMIT 10
-    """)
+    # ---------- GET: pick random questions ONCE ----------
+    if request.method == "GET":
+        cur.execute("""
+            SELECT id FROM mock_questions
+            ORDER BY RANDOM()
+            LIMIT 10
+        """)
+        q_ids = [row["id"] for row in cur.fetchall()]
+        session["mock_q_ids"] = q_ids
+
+    # ---------- FETCH SAME QUESTIONS ----------
+    q_ids = session.get("mock_q_ids", [])
+
+    if not q_ids:
+        return render_template(
+            "mocktest.html",
+            questions=[],
+            score=None,
+            submitted=False
+        )
+
+    placeholders = ",".join("?" for _ in q_ids)
+    cur.execute(
+        f"SELECT * FROM mock_questions WHERE id IN ({placeholders})",
+        q_ids
+    )
     rows = cur.fetchall()
     conn.close()
 
     questions = []
     for row in rows:
         questions.append({
+            "id": row["id"],
             "q": row["question"],
             "options": [
                 row["option1"],
@@ -294,6 +318,7 @@ def mocktest():
     score = None
     submitted = False
 
+    # ---------- POST: evaluate SAME QUESTIONS ----------
     if request.method == "POST":
         submitted = True
         score = 0
@@ -304,6 +329,9 @@ def mocktest():
 
             if selected and selected.strip() == q["answer"].strip():
                 score += 1
+
+        # Clear session so next test gets new questions
+        session.pop("mock_q_ids", None)
 
     return render_template(
         "mocktest.html",
