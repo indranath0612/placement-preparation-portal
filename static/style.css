@@ -100,39 +100,26 @@ input {
 /* OPTION BASE */
 .option {
     display: block;
-    padding: 14px;
-    margin: 10px 0;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-/* HIDE RADIO BUT KEEP IT ACTIVE */
-.option input {
-    display: none;
-}
-
-/* SELECTED (BEFORE SUBMIT) */
-.option input:checked + span,
-.option:has(input:checked) {
-    border-color: #2563eb;
-    background: #eff6ff;
-}
-
-/* CORRECT ANSWER */
-.correct {
-    background-color: #16a34a !important;
+.option.correct {
+    background-color: #16a34a;
     color: white;
     border-color: #16a34a;
 }
 
-/* WRONG ANSWER */
-.wrong {
-    background-color: #dc2626 !important;
+.option.wrong {
+    background-color: #dc2626;
     color: white;
     border-color: #dc2626;
 }
+
+
 
 .btn {
     background-color: #2563eb;
