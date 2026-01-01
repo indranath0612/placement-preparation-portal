@@ -143,3 +143,14 @@ input {
     font-size: 16px;
     cursor: pointer;
 }
+
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    z-index: 9999;
+}

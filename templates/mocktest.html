@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Mock Test</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+    <p>Loading... Please wait ⏳</p>
+</div>
 
 <!-- NAVBAR -->
 <div class="navbar">
@@ -21,63 +27,92 @@
 
         <h2>📝 Mock Test</h2>
 
-        <form method="POST">
+        {% if questions|length == 0 %}
+            <p>No questions available right now. Please check back later.</p>
+        {% else %}
 
-         <form method="POST">
+        <form method="POST" id="mocktest-form">
 
-{% for q in questions %}
-    {% set q_index = loop.index0 %}
+            <div id="mocktest-container" data-total="{{ questions|length }}">
 
-    <div class="question-block">
-        <p><b>{{ loop.index }}. {{ q.q }}</b></p>
+            {% for q in questions %}
+                {% set q_index = loop.index0 %}
 
-        {% for opt in q.options %}
-            {% set opt_id = "q" ~ q_index ~ "_" ~ loop.index0 %}
+                <div class="question-block">
+                    <p><b>{{ loop.index }}. {{ q.q }}</b></p>
 
-            {% if submitted and opt == q.answer %}
-                {% set cls = "option correct" %}
-            {% elif submitted and opt == q.selected and opt != q.answer %}
-                {% set cls = "option wrong" %}
-            {% else %}
-                {% set cls = "option" %}
+                    {% for opt in q.options %}
+                        {% set opt_id = "q" ~ q_index ~ "_" ~ loop.index0 %}
+
+                        {% if submitted and opt == q.answer %}
+                            {% set cls = "option correct" %}
+                        {% elif submitted and opt == q.selected and opt != q.answer %}
+                            {% set cls = "option wrong" %}
+                        {% else %}
+                            {% set cls = "option" %}
+                        {% endif %}
+
+                        <label class="{{ cls }}">
+                            <input type="radio"
+                                   name="question_{{ q_index }}"
+                                   value="{{ opt }}"
+                                   {% if q.selected == opt %}checked{% endif %}
+                                   {% if submitted %}disabled{% endif %}>
+                            {{ opt }}
+                        </label>
+                    {% endfor %}
+                </div>
+
+            {% endfor %}
+            </div>
+
+            {% if not submitted %}
+                <button type="submit" class="btn" disabled>Submit Test</button>
             {% endif %}
-
-            <label class="{{ cls }}" for="{{ opt_id }}">
-                <input type="radio"
-                       id="{{ opt_id }}"
-                       name="q{{ q_index }}"
-                       value="{{ opt }}"
-                       {% if q.selected == opt %}checked{% endif %}
-                       {% if submitted %}disabled{% endif %}>
-                {{ opt }}
-            </label>
-        {% endfor %}
-    </div>
-
-
-{% endfor %}
-<button type="submit" class="btn">Submit Test</button>
-
-</form>
-
-
-
-
-
 
         </form>
 
+        {% endif %}
+
         {% if score is not none %}
             <h3 style="margin-top:20px;">
-                Your Score: {{ score }} / {{ questions | length }}
+                Your Score: {{ score }} / {{ questions|length }}
             </h3>
         {% endif %}
 
     </div>
 </div>
-{% if score is not none %}
-    <h3>Your Score: {{ score }} / {{ questions|length }}</h3>
-{% endif %}
+
+<!-- LOADING SCREEN SCRIPT -->
+<script>
+window.onload = function () {
+    document.getElementById("loading-screen").style.display = "none";
+};
+</script>
+
+<!-- SUBMIT ENABLE LOGIC -->
+<script>
+const submitBtn = document.querySelector("button[type='submit']");
+const questionBlocks = document.querySelectorAll(".question-block");
+
+function checkAllAnswered() {
+    let answeredCount = 0;
+
+    questionBlocks.forEach(block => {
+        const checked = block.querySelector("input[type='radio']:checked");
+        if (checked) answeredCount++;
+    });
+
+    submitBtn.disabled = answeredCount !== questionBlocks.length;
+}
+
+document.querySelectorAll("input[type='radio']").forEach(radio => {
+    radio.addEventListener("change", checkAllAnswered);
+});
+
+// Initial state
+if (submitBtn) submitBtn.disabled = true;
+</script>
 
 </body>
 </html>

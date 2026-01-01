@@ -1,4 +1,9 @@
-   <!DOCTYPE html>
+<div id="loading-screen">
+    <p>Loading... Please wait ⏳</p>
+</div>
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <title>Coding Practice</title>
@@ -25,6 +30,10 @@
         <p>Practice commonly asked coding interview problems.</p>
 
         <ol style="margin-top:20px; padding-left:20px;">
+            {% if questions|length == 0 %}
+    <p>No coding questions added yet.</p>
+{% endif %}
+
             {% for q in questions %}
                 <li style="margin-bottom:10px;">
                     {{ q }}
@@ -37,3 +46,9 @@
 
 </body>
 </html>
+
+<script>
+window.onload = function () {
+    document.getElementById("loading-screen").style.display = "none";
+};
+</script>

@@ -1,3 +1,8 @@
+<div id="loading-screen">
+    <p>Loading... Please wait ⏳</p>
+</div>
+
+
 <div class="navbar">
     <div><b>Placement Portal</b></div>
     <div>
@@ -25,3 +30,9 @@ function toggleDark() {
 
 </body>
 </html>
+
+<script>
+window.onload = function () {
+    document.getElementById("loading-screen").style.display = "none";
+};
+</script>

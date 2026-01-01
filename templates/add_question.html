@@ -1,3 +1,7 @@
+<div id="loading-screen">
+    <p>Loading... Please wait ⏳</p>
+</div>
+
 <div class="container">
     <div class="card">
         <h2>Add Question</h2>
@@ -12,3 +16,9 @@
         </form>
     </div>
 </div>
+
+<script>
+window.onload = function () {
+    document.getElementById("loading-screen").style.display = "none";
+};
+</script>
