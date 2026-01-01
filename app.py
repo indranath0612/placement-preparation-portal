@@ -4,6 +4,28 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = "placement_secret"
 
+def init_db():
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS mock_questions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question TEXT NOT NULL,
+        option1 TEXT NOT NULL,
+        option2 TEXT NOT NULL,
+        option3 TEXT NOT NULL,
+        option4 TEXT NOT NULL,
+        answer TEXT NOT NULL
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+# Call it when app starts
+init_db()
 
 def get_db():
     return sqlite3.connect("database.db")
@@ -140,6 +162,7 @@ def get_random_mcqs(limit=10):
 
 @app.route("/mocktest", methods=["GET", "POST"])
 def mocktest():
+    
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -181,6 +204,13 @@ def mocktest():
 
             if selected and selected.strip() == q["answer"].strip():
                 score += 1
+    if not rows:
+        return render_template(
+        "mocktest.html",
+        questions=[],
+        score=None,
+        submitted=False
+    )
 
     return render_template(
         "mocktest.html",
