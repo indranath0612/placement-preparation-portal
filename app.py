@@ -214,10 +214,11 @@ def dashboard():
 
 @app.route("/mocktest", methods=["GET", "POST"])
 def mocktest():
-    conn = get_db()
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
-    # ---------- PICK RANDOM QUESTIONS ONCE ----------
+    # ---------- GET: Pick random questions ONCE ----------
     if request.method == "GET":
         cur.execute("""
             SELECT id FROM mock_questions
@@ -237,7 +238,7 @@ def mocktest():
             submitted=False
         )
 
-    placeholders = ",".join("?" * len(q_ids))
+    placeholders = ",".join("?" for _ in q_ids)
     cur.execute(
         f"SELECT * FROM mock_questions WHERE id IN ({placeholders})",
         q_ids
@@ -263,7 +264,7 @@ def mocktest():
     score = None
     submitted = False
 
-    # ---------- EVALUATE ----------
+    # ---------- POST: Evaluate answers ----------
     if request.method == "POST":
         submitted = True
         score = 0
@@ -275,7 +276,7 @@ def mocktest():
             if selected and selected.strip() == q["answer"].strip():
                 score += 1
 
-        # Reset for next attempt
+        # Clear session AFTER evaluation
         session.pop("mock_q_ids", None)
 
     return render_template(
@@ -284,6 +285,7 @@ def mocktest():
         score=score,
         submitted=submitted
     )
+
 
 # ---------------- OTHER PAGES ----------------
 
