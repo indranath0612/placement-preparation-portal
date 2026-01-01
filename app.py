@@ -140,23 +140,46 @@ def get_random_mcqs(limit=10):
 
 @app.route("/mocktest", methods=["GET", "POST"])
 def mocktest():
+    conn = sqlite3.connect("database.db")
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, question, option1, option2, option3, option4, answer
+        FROM mock_questions
+        ORDER BY RANDOM()
+        LIMIT 10
+    """)
+    rows = cur.fetchall()
+    conn.close()
+
+    questions = []
+    for row in rows:
+        questions.append({
+            "id": row["id"],
+            "q": row["question"],
+            "options": [
+                row["option1"],
+                row["option2"],
+                row["option3"],
+                row["option4"]
+            ],
+            "answer": row["answer"],
+            "selected": None
+        })
+
     score = None
     submitted = False
 
-    if request.method == "GET":
-        questions = get_random_mcqs(10)
-        session["mock_questions"] = questions
-        submitted = False
-
-    else:
-        questions = session.get("mock_questions", [])
-        score = 0
+    if request.method == "POST":
         submitted = True
+        score = 0
 
         for i, q in enumerate(questions):
             selected = request.form.get(f"q{i}")
             q["selected"] = selected
-            if selected == q["answer"]:
+
+            if selected and selected.strip() == q["answer"].strip():
                 score += 1
 
     return render_template(
@@ -165,6 +188,7 @@ def mocktest():
         score=score,
         submitted=submitted
     )
+
 
 
 if __name__ == "__main__":
