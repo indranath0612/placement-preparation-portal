@@ -34,37 +34,25 @@
         <form method="POST" id="mocktest-form">
 
             <div id="mocktest-container" data-total="{{ questions|length }}">
+{% for opt in q.options %}
+    {% if submitted and opt == q.answer %}
+        {% set cls = "option correct" %}
+    {% elif submitted and opt == q.selected and opt != q.answer %}
+        {% set cls = "option wrong" %}
+    {% else %}
+        {% set cls = "option" %}
+    {% endif %}
 
-            {% for q in questions %}
-                {% set q_index = loop.index0 %}
+    <label class="{{ cls }}">
+        <input type="radio"
+               name="q{{ q.id }}"
+               value="{{ opt }}"
+               {% if q.selected == opt %}checked{% endif %}
+               {% if submitted %}disabled{% endif %}>
+        {{ opt }}
+    </label>
+{% endfor %}
 
-                <div class="question-block">
-                    <p><b>{{ loop.index }}. {{ q.q }}</b></p>
-
-                    {% for opt in q.options %}
-                        {% set opt_id = "q" ~ q_index ~ "_" ~ loop.index0 %}
-
-                        {% if submitted and opt == q.answer %}
-                            {% set cls = "option correct" %}
-                        {% elif submitted and opt == q.selected and opt != q.answer %}
-                            {% set cls = "option wrong" %}
-                        {% else %}
-                            {% set cls = "option" %}
-                        {% endif %}
-
-                        <label class="{{ cls }}">
-                            <input type="radio"
-                                   name="question_{{ q_index }}"
-                                   value="{{ opt }}"
-                                   {% if q.selected == opt %}checked{% endif %}
-                                   {% if submitted %}disabled{% endif %}>
-                            {{ opt }}
-                        </label>
-                    {% endfor %}
-                </div>
-
-            {% endfor %}
-            </div>
 
             {% if not submitted %}
                 <button type="submit" class="btn" disabled>Submit Test</button>

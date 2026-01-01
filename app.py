@@ -323,11 +323,15 @@ def mocktest():
         submitted = True
         score = 0
 
-        for i, q in enumerate(questions):
-            selected = request.form.get(f"q{i}")
-            q["selected"] = selected
+        for q in questions:
+            selected = request.form.get(f"q{q['id']}")
+    q["selected"] = selected
 
-            if selected and selected.strip() == q["answer"].strip():
+    if selected and selected.strip() == q["answer"].strip():
+        score += 1
+        q["selected"] = selected
+
+        if selected and selected.strip() == q["answer"].strip():
                 score += 1
 
         # Clear session so next test gets new questions
